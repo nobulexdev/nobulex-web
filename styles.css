@@ -10,25 +10,25 @@
 
 :root {
   --bg: #000000;
-  --bg-elevated: #0d0d0e;
-  --bg-card: #141416;
-  --bg-card-hover: #1a1a1d;
+  --bg-elevated: #0a0a0b;
+  --bg-card: #111113;
+  --bg-card-hover: #18181b;
   --text: #fafafa;
   --text-primary: #fafafa;
   --text-secondary: #a1a1a6;
-  --text-muted: #6e6e73;
+  --text-muted: #71717a;
   --accent: #ffffff;
   --accent-hover: #e8e8ed;
   --accent-color: #ffffff;
   --accent-muted: rgba(255, 255, 255, 0.06);
   --accent-glow: rgba(255, 255, 255, 0.08);
   --border: rgba(255, 255, 255, 0.08);
-  --border-hover: rgba(255, 255, 255, 0.15);
+  --border-hover: rgba(255, 255, 255, 0.12);
   --radius: 8px;
   --radius-lg: 12px;
   --radius-xl: 20px;
   --radius-pill: 9999px;
-  --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", sans-serif;
   --font-display: -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", sans-serif;
   --font-mono: ui-monospace, "SF Mono", "Menlo", "Monaco", "Consolas", monospace;
   --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -683,7 +683,6 @@ main {
 
 .btn--primary:hover {
   background: var(--accent-hover);
-  transform: none;
 }
 
 .btn--ghost {
@@ -732,7 +731,7 @@ main {
   display: block;
   width: 1px;
   height: 40px;
-  background: linear-gradient(to bottom, var(--text-muted), transparent);
+  background: linear-gradient(to bottom, var(--accent), transparent);
   animation: dashFade 2s ease-in-out infinite;
 }
 
@@ -1196,8 +1195,13 @@ main {
   color: var(--accent);
 }
 
+.code-block:hover {
+  border-color: rgba(0, 212, 255, 0.2);
+  box-shadow: 0 0 24px var(--accent-muted);
+}
+
 .code-block .token-str {
-  color: var(--accent-hover);
+  color: #7dd3fc;
 }
 
 .code-cursor {
