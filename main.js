@@ -327,6 +327,25 @@
     demoRun.addEventListener('click', runDemo);
   }
 
+  /* ——— Waitlist (mailto) ——— */
+  const waitlistForm = document.getElementById('waitlist-form');
+  const waitlistEmail = document.getElementById('waitlist-email');
+  if (waitlistForm && waitlistEmail) {
+    waitlistForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = waitlistEmail.value.trim();
+      if (!email) {
+        waitlistEmail.focus();
+        return;
+      }
+      const subject = encodeURIComponent('Nobulex hosted API — waitlist');
+      const body = encodeURIComponent(
+        'Please add me to the waitlist for the Nobulex hosted API.\n\nEmail: ' + email + '\n'
+      );
+      window.location.href = 'mailto:nobulex.dev@gmail.com?subject=' + subject + '&body=' + body;
+    });
+  }
+
   /* ——— Interactive live demo ——— */
   document.querySelectorAll('.trydemo__btn').forEach((btn) => {
     btn.addEventListener('click', () => {
