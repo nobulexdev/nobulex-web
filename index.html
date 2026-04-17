@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+    document.documentElement.classList.add('js-motion');
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nobulex — The Proof-of-Behavior Protocol for AI Agents</title>
@@ -10,10 +13,30 @@
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://nobulex.com/images/nobulex-logo.png">
   <meta property="og:url" content="https://nobulex.com/">
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Nobulex — Proof-of-Behavior for AI Agents">
   <meta name="twitter:description" content="Define rules. Enforce at runtime. Prove compliance with cryptography.">
-  <meta name="theme-color" content="#000000">
+  <meta name="twitter:image" content="https://nobulex.com/images/nobulex-logo.png">
+  <meta name="theme-color" content="#030708">
+  <link rel="dns-prefetch" href="https://videos.pexels.com">
+  <link rel="dns-prefetch" href="https://images.unsplash.com">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[
+    {"@type":"Organization","@id":"https://nobulex.com/#organization","name":"Nobulex","url":"https://nobulex.com","logo":{"@type":"ImageObject","url":"https://nobulex.com/images/nobulex-logo.png"},"sameAs":["https://github.com/nobulexdev/nobulex","https://x.com/nobulexlabs"],"description":"The proof-of-behavior protocol for autonomous AI agents. Runtime enforcement and cryptographically verifiable action logs."},
+    {"@type":"WebSite","@id":"https://nobulex.com/#website","url":"https://nobulex.com","name":"Nobulex","publisher":{"@id":"https://nobulex.com/#organization"}},
+    {"@type":"SoftwareApplication","@id":"https://nobulex.com/#software","name":"Nobulex","applicationCategory":"DeveloperApplication","applicationSubCategory":"AI Infrastructure","operatingSystem":"Cross-platform","url":"https://nobulex.com","description":"Proof-of-behavior protocol: signed covenants, pre-execution middleware, and tamper-evident hash chains for AI agents.","featureList":["Pre-execution policy enforcement","Signed behavioral covenants","Tamper-evident SHA-256 action logs","Third-party verifiable proofs","MCP and LangChain integration","MIT licensed open source"],"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"provider":{"@id":"https://nobulex.com/#organization"}}
+  ]}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+    {"@type":"Question","name":"What is Nobulex?","acceptedAnswer":{"@type":"Answer","text":"Nobulex is a proof-of-behavior protocol for AI agents. It combines signed covenants (immutable behavioral specs), pre-execution middleware that blocks disallowed actions before they run, and tamper-evident hash-chained action logs so anyone can verify what happened without trusting the operator."}},
+    {"@type":"Question","name":"How is proof-of-behavior different from a normal audit log?","acceptedAnswer":{"@type":"Answer","text":"Audit logs are often best-effort and operator-controlled. Nobulex ties identity to keys, enforces rules before execution, and chains entries with hashes so tampering breaks the chain. Verification can be repeated by third parties using published covenant and log data."}},
+    {"@type":"Question","name":"What is a covenant?","acceptedAnswer":{"@type":"Answer","text":"A covenant is a signed behavioral specification: what an agent may and may not do. It can only be narrowed over time, never loosened, so policy drift cannot silently expand permissions."}},
+    {"@type":"Question","name":"Does Nobulex work with MCP and LangChain?","acceptedAnswer":{"@type":"Answer","text":"Yes. Nobulex is designed to sit alongside the surfaces agents already use, including MCP for tools and integrations such as LangChain. See the ecosystem section and documentation for integration paths."}},
+    {"@type":"Question","name":"Is Nobulex open source?","acceptedAnswer":{"@type":"Answer","text":"Nobulex is MIT licensed and developed in the open on GitHub. You can self-host, audit the protocol, and run the live demo locally."}},
+    {"@type":"Question","name":"How does pre-execution enforcement work?","acceptedAnswer":{"@type":"Answer","text":"Middleware intercepts actions before they execute, evaluates them against the covenant, and only allows actions that pass. Blocked attempts can still be recorded in the action log, producing a verifiable trace without executing forbidden behavior."}}
+  ]}
+  </script>
   <link rel="icon" type="image/png" href="/icon.png">
   <link rel="apple-touch-icon" href="/icon.png">
   <link rel="shortcut icon" type="image/png" href="/icon.png">
@@ -26,7 +49,11 @@
   <a href="#main" class="skip-link">Skip to content</a>
   <header class="header" data-animate="header">
     <div class="header__top">
-      <a href="index.html" class="header__logo" data-magnetic aria-label="Nobulex home"><img src="images/nobulex-logo.png" alt="Nobulex" class="header__logo-img"></a>
+      <a href="index.html" class="header__logo" data-magnetic aria-label="Nobulex home"><img src="images/nobulex-logo.png" alt="Nobulex" class="header__logo-img" decoding="async"></a>
+      <nav class="header__quick" aria-label="Quick links">
+        <a href="docs/index.html">Docs</a>
+        <a href="https://github.com/nobulexdev/nobulex" rel="noopener noreferrer">GitHub</a>
+      </nav>
       <button type="button" class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
         <span class="nav-toggle__bar"></span>
         <span class="nav-toggle__bar"></span>
@@ -42,11 +69,11 @@
         <a href="#problem">Problem</a>
         <a href="#primitives">Primitives</a>
         <a href="#how-it-works">How it works</a>
-        <a href="#guarantee">Guarantee</a>
-        <a href="demo.html">Demo</a>
+        <a href="#demo">Demo</a>
+        <a href="#integrations">Integrations</a>
+        <a href="#faq">FAQ</a>
         <a href="#traction">Traction</a>
         <a href="#waitlist">Waitlist</a>
-        <a href="demo.html">Full demo</a>
         <a href="docs/index.html">Docs</a>
         <a href="https://github.com/nobulexdev/nobulex" rel="noopener noreferrer">GitHub</a>
       </div>
@@ -58,23 +85,40 @@
     <!-- Hero -->
     <section class="hero" id="hero">
       <div class="hero__video-wrap" aria-hidden="true">
-        <video class="hero__video" autoplay muted loop playsinline preload="auto" src="https://videos.pexels.com/video-files/4939677/4939677-uhd_2560_1440_30fps.mp4" poster="images/video-poster.svg"></video>
+        <div class="hero__video-fallback"></div>
+        <video class="hero__video" autoplay muted loop playsinline preload="metadata" poster="images/video-poster.svg" fetchpriority="high">
+          <source src="https://videos.pexels.com/video-files/4939677/4939677-hd_1920_1080_30fps.mp4" type="video/mp4" media="(max-width: 1919px)">
+          <source src="https://videos.pexels.com/video-files/4939677/4939677-uhd_2560_1440_30fps.mp4" type="video/mp4">
+        </video>
       </div>
       <div class="hero__bg" aria-hidden="true"></div>
       <div class="hero__grid" aria-hidden="true"></div>
       <div class="hero__vignette" aria-hidden="true"></div>
       <div class="hero__inner">
-        <div class="hero__content" data-reveal>
-          <p class="hero__eyebrow">Early access</p>
+        <div class="hero__content">
+          <p class="hero__wordmark" aria-label="Nobulex">Nobulex</p>
+          <p class="hero__protocol">
+            <span class="hero__protocol-lead">Proof-of-behavior protocol</span>
+            <span class="hero__protocol-sep" aria-hidden="true">·</span>
+            <span class="hero__protocol-rest">MIT · Open source · v1.0.0</span>
+          </p>
           <h1 class="hero__title">
             <span class="hero__line" data-split="words">Proof of</span>
             <span class="hero__line hero__line--accent" data-split="words">Behavior</span>
           </h1>
-          <p class="hero__hook">Enforce rules before execution. Anyone can verify the log.</p>
+          <p class="hero__hook">Enforce rules before execution. Anyone can verify the log—not the operator.</p>
+          <p class="hero__kicker">Policies promise. Nobulex proves.</p>
           <div class="hero__cta hero__cta-buttons">
             <a href="#waitlist" class="btn btn--primary">Join waitlist</a>
             <a href="https://github.com/nobulexdev/nobulex#live-demo" class="btn btn--ghost" rel="noopener noreferrer">Run demo</a>
           </div>
+          <ul class="hero__metrics" aria-label="Protocol properties">
+            <li class="hero__metric"><span class="hero__metric-k">Enforcement</span> <span class="hero__metric-v">Pre-execution</span></li>
+            <li class="hero__metric"><span class="hero__metric-k">Evidence</span> <span class="hero__metric-v">Hash-chained log</span></li>
+            <li class="hero__metric"><span class="hero__metric-k">Verification</span> <span class="hero__metric-v">Third-party</span></li>
+            <li class="hero__metric"><span class="hero__metric-k">License</span> <span class="hero__metric-v">MIT</span></li>
+          </ul>
+          <p class="hero__proof">Registered issuer in the Open Agent Trust Registry · Listed in awesome-mcp-servers (84K⭐)</p>
         </div>
       </div>
       <div class="hero__scroll-hint" aria-hidden="true">
@@ -83,7 +127,20 @@
       </div>
     </section>
 
-    <div class="section-buffer" aria-hidden="true"></div>
+    <section class="intro-strip" aria-label="Positioning and trust">
+      <div class="intro-strip__inner">
+        <p class="intro-strip__position">
+          <span class="intro-strip__muted">MCP connects tools · A2A connects agents</span>
+          <span class="intro-strip__em">Nobulex connects actions to rules—and proves it.</span>
+        </p>
+        <ul class="intro-strip__trust" aria-label="Licensing and proof">
+          <li><span class="intro-strip__dot" aria-hidden="true"></span> MIT licensed</li>
+          <li><span class="intro-strip__dot" aria-hidden="true"></span> Open source</li>
+          <li><span class="intro-strip__dot" aria-hidden="true"></span> Verifiable logs</li>
+          <li><span class="intro-strip__dot" aria-hidden="true"></span> Auditable protocol</li>
+        </ul>
+      </div>
+    </section>
 
     <!-- Problem -->
     <section class="section section--problem section--bg" id="problem" data-section="problem" style="--bg-image: url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1920&q=80')">
@@ -106,33 +163,33 @@
         <p class="section__label section__label--center" data-reveal>SIX PRIMITIVES</p>
         <h2 class="primitives__title" data-reveal>The trust stack</h2>
         <p class="primitives__unify" data-reveal>Together, these turn “policy” from a promise into a proof.</p>
-        <div class="primitives__grid" data-reveal>
-          <article class="primitive-card">
+        <div class="primitives__grid">
+          <article class="primitive-card" data-reveal>
             <span class="primitive-card__label">Identity</span>
             <h3 class="primitive-card__title">DID</h3>
             <p>Decentralized identifiers. Who is this agent? Cryptographic binding to keys and lineage.</p>
           </article>
-          <article class="primitive-card">
+          <article class="primitive-card" data-reveal>
             <span class="primitive-card__label">Covenant</span>
             <h3 class="primitive-card__title">Behavioral spec</h3>
             <p>What will it do — and won’t do? Signed, immutable constraints. Only narrowable, never loosened.</p>
           </article>
-          <article class="primitive-card">
+          <article class="primitive-card" data-reveal>
             <span class="primitive-card__label">Action Log</span>
             <h3 class="primitive-card__title">Hash-chained record</h3>
             <p>Every action logged with SHA-256 chain links. Tamper with one entry, the whole chain breaks.</p>
           </article>
-          <article class="primitive-card">
+          <article class="primitive-card" data-reveal>
             <span class="primitive-card__label">Enforcement</span>
             <h3 class="primitive-card__title">Pre-execution middleware</h3>
             <p>Rules checked before the action runs. Forbidden actions never execute.</p>
           </article>
-          <article class="primitive-card">
+          <article class="primitive-card" data-reveal>
             <span class="primitive-card__label">Verification</span>
             <h3 class="primitive-card__title">Deterministic proof</h3>
             <p>Same inputs, same result. Independent, third-party verifiable — no trust in the verifier needed.</p>
           </article>
-          <article class="primitive-card">
+          <article class="primitive-card" data-reveal>
             <span class="primitive-card__label">Proof</span>
             <h3 class="primitive-card__title">Attestation + evidence</h3>
             <p>Portable proof-of-behavior that any counterparty can verify. Includes behavioral attestation records.</p>
@@ -141,48 +198,102 @@
       </div>
     </section>
 
-    <div class="divider" aria-hidden="true"></div>
+    <!-- Architecture: visual pipeline -->
+    <section class="section section--architecture section--alt" id="architecture" data-section="architecture">
+      <div class="section__content architecture__content">
+        <p class="section__label section__label--center" data-reveal>ARCHITECTURE</p>
+        <h2 class="architecture__title" data-reveal>One protected execution path</h2>
+        <p class="architecture__lede" data-reveal>Middleware sits in front of side effects. Covenants are evaluated before an action is allowed to proceed; the action log captures what happened in a tamper-evident chain.</p>
+        <div class="architecture__diagram" data-reveal>
+          <div
+            class="arch-flow"
+            role="img"
+            aria-label="Execution path: Agent, Middleware intercepts, Covenant evaluates to allow or block, then Action log append-only and chained."
+          >
+            <p class="arch-flow__eyebrow">Hot path</p>
+            <div class="arch-flow__track">
+              <div class="arch-flow__step">
+                <span class="arch-flow__name">Agent</span>
+              </div>
+              <span class="arch-flow__chev" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <div class="arch-flow__step arch-flow__step--accent">
+                <span class="arch-flow__name">Middleware</span>
+                <span class="arch-flow__hint">intercepts</span>
+              </div>
+              <span class="arch-flow__chev" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <div class="arch-flow__step">
+                <span class="arch-flow__name">Covenant</span>
+                <span class="arch-flow__hint">evaluate</span>
+              </div>
+              <span class="arch-flow__chev" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <div class="arch-flow__decision" aria-hidden="true">
+                <div class="arch-flow__outcomes">
+                  <span class="arch-flow__pill arch-flow__pill--allow">ALLOW</span>
+                  <span class="arch-flow__pill arch-flow__pill--block">BLOCK</span>
+                </div>
+              </div>
+              <span class="arch-flow__chev" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <div class="arch-flow__step arch-flow__step--log">
+                <span class="arch-flow__name">Action log</span>
+                <span class="arch-flow__hint arch-flow__hint--mono">append-only · chained</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="architecture__footnote" data-reveal>Independent parties run <code class="architecture__code">verify(spec, log)</code> — same inputs, same result. <a href="https://github.com/nobulexdev/nobulex/blob/main/PROTOCOL.md" rel="noopener noreferrer">Read the protocol spec →</a></p>
+      </div>
+    </section>
 
-    <!-- How it works -->
+    <!-- How it works: black → still → black (infra / ops — not video) -->
     <section class="section section--flow" id="how-it-works" data-section="flow">
+      <div class="flow__ambient" aria-hidden="true">
+        <div class="flow__ambient-bg"></div>
+        <div class="flow__ambient-scrim"></div>
+      </div>
       <div class="section__content flow__content">
         <p class="section__label section__label--center" data-reveal>HOW IT WORKS</p>
         <h2 class="flow__title" data-reveal>From action to verifiable proof</h2>
-        <div class="flow__diagram" data-reveal>
-          <div class="flow__step">
+        <div class="flow__diagram">
+          <div class="flow__step" data-reveal>
             <span class="flow__num">1</span>
             <span class="flow__label">Agent decides action</span>
           </div>
-          <span class="flow__line" aria-hidden="true"></span>
-          <div class="flow__step">
+          <span class="flow__line flow__line--reveal" data-reveal aria-hidden="true"></span>
+          <div class="flow__step" data-reveal>
             <span class="flow__num">2</span>
             <span class="flow__label">Middleware intercepts</span>
           </div>
-          <span class="flow__line" aria-hidden="true"></span>
-          <div class="flow__step">
+          <span class="flow__line flow__line--reveal" data-reveal aria-hidden="true"></span>
+          <div class="flow__step" data-reveal>
             <span class="flow__num">3</span>
             <span class="flow__label">Evaluate covenant</span>
           </div>
-          <span class="flow__line" aria-hidden="true"></span>
-          <div class="flow__step">
+          <span class="flow__line flow__line--reveal" data-reveal aria-hidden="true"></span>
+          <div class="flow__step" data-reveal>
             <span class="flow__num">4</span>
             <span class="flow__label">Block or allow</span>
           </div>
-          <span class="flow__line" aria-hidden="true"></span>
-          <div class="flow__step">
+          <span class="flow__line flow__line--reveal" data-reveal aria-hidden="true"></span>
+          <div class="flow__step" data-reveal>
             <span class="flow__num">5</span>
             <span class="flow__label">Log to action log</span>
           </div>
-          <span class="flow__line" aria-hidden="true"></span>
-          <div class="flow__step flow__step--final">
+          <span class="flow__line flow__line--reveal" data-reveal aria-hidden="true"></span>
+          <div class="flow__step flow__step--final" data-reveal>
             <span class="flow__num">6</span>
             <span class="flow__label">Verifiable by anyone</span>
           </div>
         </div>
       </div>
     </section>
-
-    <div class="divider" aria-hidden="true"></div>
 
     <!-- See it fail closed demo -->
     <section class="section section--demo section--alt" id="demo" data-section="demo">
@@ -215,20 +326,18 @@
       </div>
     </section>
 
-    <div class="divider" aria-hidden="true"></div>
-
     <!-- Two-tier guarantee -->
     <section class="section section--guarantee section--alt" id="guarantee" data-section="guarantee">
       <div class="section__content">
         <p class="section__label section__label--center" data-reveal>TWO-TIER GUARANTEE</p>
         <h2 class="guarantee__title" data-reveal>Enforcement you can explain</h2>
-        <div class="guarantee__grid" data-reveal>
-          <article class="guarantee__tier guarantee__tier--1">
+        <div class="guarantee__grid">
+          <article class="guarantee__tier guarantee__tier--1" data-reveal>
             <span class="guarantee__tier-label">Tier 1</span>
             <h3>Blocked before it runs</h3>
             <p>Rules are enforced before actions leave the protected path—so disallowed behavior doesn’t ship as a normal “successful” action. Details on hardware boundaries and verification are in the <a href="https://github.com/nobulexdev/nobulex/blob/main/PROTOCOL.md" rel="noopener noreferrer">protocol spec</a>.</p>
           </article>
-          <article class="guarantee__tier guarantee__tier--2">
+          <article class="guarantee__tier guarantee__tier--2" data-reveal>
             <span class="guarantee__tier-label">Tier 2</span>
             <h3>Costly to cheat</h3>
             <p>Where full pre-execution blocking isn’t enough, stake and slashing make violations economically irrational—same idea as proof-of-stake, applied to commitments.</p>
@@ -236,8 +345,6 @@
         </div>
       </div>
     </section>
-
-    <div class="divider" aria-hidden="true"></div>
 
     <!-- Why Nobulex vs guardrails -->
     <section class="section section--compare section--alt" id="vs-guardrails" data-section="compare">
@@ -275,35 +382,64 @@
       </div>
     </section>
 
-    <div class="divider" aria-hidden="true"></div>
-
-    <!-- Ecosystem -->
-    <section class="section section--ecosystem section--alt" id="ecosystem" data-section="ecosystem">
-      <div class="section__content">
-        <p class="section__label section__label--center" data-reveal>ECOSYSTEM</p>
-        <h2 class="ecosystem__title" data-reveal>Who it works with</h2>
-        <p class="ecosystem__intro" data-reveal>Nobulex isn’t a silo—it plugs into the same surfaces agents already use.</p>
-        <ul class="ecosystem__list" data-reveal>
-          <li class="ecosystem__item"><span class="ecosystem__name">MCP</span><span class="ecosystem__desc">Model Context Protocol — tools and context your agent already speaks</span></li>
-          <li class="ecosystem__item"><span class="ecosystem__name">A2A</span><span class="ecosystem__desc">Agent-to-agent messaging and handoffs</span></li>
-          <li class="ecosystem__item"><span class="ecosystem__name">awesome-mcp-servers</span><span class="ecosystem__desc">Listed in the community registry (84K★ on the curated list)</span></li>
+    <!-- Integrations + standards (depth for evaluators) -->
+    <section class="section section--integrations section--alt" id="integrations" data-section="integrations">
+      <div class="section__content integrations__content">
+        <p class="section__label section__label--center" data-reveal>INTEGRATIONS</p>
+        <h2 class="integrations__title" data-reveal>Surfaces agents already use</h2>
+        <p class="integrations__intro" data-reveal>Drop the SDK on your stack—no rip-and-replace. Nobulex complements tool protocols and agent frameworks.</p>
+        <ul class="integrations__badges" data-reveal>
+          <li class="integrations__badge">MCP</li>
+          <li class="integrations__badge">LangChain</li>
+          <li class="integrations__badge">A2A</li>
+          <li class="integrations__badge">TypeScript / Node</li>
+          <li class="integrations__badge">Python</li>
+          <li class="integrations__badge">Claude &amp; IDE agents</li>
+          <li class="integrations__badge">OpenAI API</li>
+          <li class="integrations__badge">Custom runtimes</li>
         </ul>
+        <p class="section__label section__label--center integrations__standards-label" data-reveal>STANDARDS &amp; PRIMITIVES</p>
+        <ul class="standards__grid" data-reveal>
+          <li class="standards__item"><span class="standards__name">SHA-256</span><span class="standards__desc">Hash-chained action log entries</span></li>
+          <li class="standards__item"><span class="standards__name">DIDs</span><span class="standards__desc">Agent identity &amp; key binding</span></li>
+          <li class="standards__item"><span class="standards__name">Signed covenants</span><span class="standards__desc">Immutable behavioral specs</span></li>
+          <li class="standards__item"><span class="standards__name">Deterministic verify</span><span class="standards__desc">Reproducible proof checks</span></li>
+          <li class="standards__item"><span class="standards__name">EU AI Act</span><span class="standards__desc">Docs for accountability context</span></li>
+          <li class="standards__item"><span class="standards__name">MIT license</span><span class="standards__desc">Self-host &amp; audit freely</span></li>
+        </ul>
+        <p class="integrations__docs" data-reveal><a href="docs/integrations.html">Integration guide →</a> · <a href="docs/index.html">All documentation</a></p>
       </div>
     </section>
 
-    <div class="divider" aria-hidden="true"></div>
+    <!-- Ecosystem: Earth-at-night strip + same ramp language as Flow -->
+    <section class="section section--ecosystem section--alt" id="ecosystem" data-section="ecosystem">
+      <div class="ecosystem__ambient" aria-hidden="true">
+        <div class="ecosystem__ambient-bg"></div>
+        <div class="ecosystem__ambient-scrim"></div>
+      </div>
+      <div class="section__content ecosystem__content">
+        <p class="section__label section__label--center" data-reveal>ECOSYSTEM</p>
+        <h2 class="ecosystem__title" data-reveal>Registries &amp; crosswalks</h2>
+        <p class="ecosystem__intro" data-reveal>Where Nobulex shows up in the open agent ecosystem—beyond framework integrations.</p>
+        <ul class="ecosystem__list">
+          <li class="ecosystem__item" data-reveal><span class="ecosystem__name">MCP</span><span class="ecosystem__desc">Model Context Protocol — tools and context your agent already speaks</span></li>
+          <li class="ecosystem__item" data-reveal><span class="ecosystem__name">A2A</span><span class="ecosystem__desc">Agent-to-agent messaging and handoffs</span></li>
+          <li class="ecosystem__item" data-reveal><span class="ecosystem__name">awesome-mcp-servers</span><span class="ecosystem__desc">Listed in the community registry (84K★ on the curated list)</span></li>
+        </ul>
+      </div>
+    </section>
 
     <!-- Traction -->
     <section class="section section--traction" id="traction" data-section="traction">
       <div class="section__content">
         <p class="section__label section__label--center" data-reveal>TRACTION</p>
         <h2 class="traction__title" data-reveal>Built in the open</h2>
-        <div class="traction__stats" data-reveal>
-          <div class="traction__stat"><span class="traction__stat-val">3 lines</span><span class="traction__stat-lbl">To integrate</span></div>
-          <div class="traction__stat"><span class="traction__stat-val">Listed</span><span class="traction__stat-lbl">awesome-mcp-servers (84K★)</span></div>
-          <div class="traction__stat"><span class="traction__stat-val">Crosswalk</span><span class="traction__stat-lbl">agent-governance-vocabulary</span></div>
-          <div class="traction__stat"><span class="traction__stat-val">LangChain</span><span class="traction__stat-lbl">Integration</span></div>
-          <div class="traction__stat"><span class="traction__stat-val">Independent</span><span class="traction__stat-lbl">Verifier</span></div>
+        <div class="traction__stats">
+          <div class="traction__stat" data-reveal><span class="traction__stat-val">3 lines</span><span class="traction__stat-lbl">To integrate</span></div>
+          <div class="traction__stat" data-reveal><span class="traction__stat-val">Listed</span><span class="traction__stat-lbl">awesome-mcp-servers (84K★)</span></div>
+          <div class="traction__stat" data-reveal><span class="traction__stat-val">Crosswalk</span><span class="traction__stat-lbl">agent-governance-vocabulary</span></div>
+          <div class="traction__stat" data-reveal><span class="traction__stat-val">LangChain</span><span class="traction__stat-lbl">Integration</span></div>
+          <div class="traction__stat" data-reveal><span class="traction__stat-val">Independent</span><span class="traction__stat-lbl">Verifier</span></div>
         </div>
         <p class="traction__meta" data-reveal>MIT · Open source · No vendor lock-in</p>
       </div>
@@ -334,10 +470,44 @@
       </div>
     </section>
 
+    <!-- FAQ -->
+    <section class="section section--faq section--alt section--pre-waitlist" id="faq" data-section="faq">
+      <div class="section__content faq__content">
+        <p class="section__label section__label--center" data-reveal>FAQ</p>
+        <h2 class="faq__title" data-reveal>Questions, answered</h2>
+        <div class="faq__list" data-reveal>
+          <details class="faq__item">
+            <summary class="faq__summary">What is Nobulex?</summary>
+            <p class="faq__body">Nobulex is a proof-of-behavior protocol for AI agents: signed covenants, pre-execution middleware that blocks disallowed actions, and tamper-evident hash-chained action logs that anyone can verify without trusting the operator.</p>
+          </details>
+          <details class="faq__item">
+            <summary class="faq__summary">How is proof-of-behavior different from a normal audit log?</summary>
+            <p class="faq__body">Audit logs are often best-effort and operator-controlled. Nobulex ties identity to keys, enforces rules before execution, and chains entries with hashes so tampering breaks the chain. Third parties can re-run verification with the published covenant and log.</p>
+          </details>
+          <details class="faq__item">
+            <summary class="faq__summary">What is a covenant?</summary>
+            <p class="faq__body">A covenant is a signed behavioral specification: what an agent may and may not do. It can only be narrowed over time, never loosened, so permissions cannot silently expand.</p>
+          </details>
+          <details class="faq__item">
+            <summary class="faq__summary">Does Nobulex work with MCP and LangChain?</summary>
+            <p class="faq__body">Yes. Nobulex is designed alongside the surfaces agents already use—including MCP for tools and integrations such as LangChain. See the integrations section and docs for wiring patterns.</p>
+          </details>
+          <details class="faq__item">
+            <summary class="faq__summary">Is Nobulex open source?</summary>
+            <p class="faq__body">Nobulex is MIT licensed and developed in the open on GitHub. You can self-host, audit the protocol, and run the live demo locally.</p>
+          </details>
+          <details class="faq__item">
+            <summary class="faq__summary">How does pre-execution enforcement work?</summary>
+            <p class="faq__body">Middleware intercepts actions before they execute, evaluates them against the covenant, and only allows actions that pass. Blocked attempts can still be reflected in the action log for a verifiable trace without executing forbidden behavior.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
     <!-- Waitlist (replaces pricing) -->
     <section class="section section--waitlist" id="waitlist" data-section="waitlist">
       <div class="section__content waitlist__content">
-        <p class="section__label section__label--center" data-reveal>EARLY ACCESS</p>
+        <p class="section__label section__label--center section__label--version" data-reveal>v1.0.0</p>
         <h2 class="waitlist__title" data-reveal>Hosted API</h2>
         <p class="waitlist__lede" data-reveal>Launch updates only—no spam.</p>
         <form class="waitlist__form" id="waitlist-form" data-reveal action="#" method="post" novalidate>
@@ -357,16 +527,32 @@
       <p class="footer__tagline">The proof-of-behavior protocol for autonomous AI agents.</p>
       <p class="footer__contact">Questions? <a href="mailto:nobulex.dev@gmail.com">nobulex.dev@gmail.com</a></p>
     </div>
-    <nav class="footer__nav">
+    <nav class="footer__nav" aria-label="Footer">
       <a href="https://github.com/nobulexdev/nobulex" rel="noopener noreferrer">GitHub</a>
       <a href="https://github.com/nobulexdev/nobulex/blob/main/PROTOCOL.md" rel="noopener noreferrer">Protocol</a>
       <a href="docs/index.html">Docs</a>
+      <a href="docs/integrations.html">Integrations</a>
+      <a href="#faq">FAQ</a>
       <a href="https://www.npmjs.com/package/@nobulex/sdk" rel="noopener noreferrer">@nobulex/sdk</a>
       <a href="https://x.com/nobulexlabs" rel="noopener noreferrer">X</a>
     </nav>
   </footer>
 
   <div class="scroll-bar" aria-hidden="true"></div>
+
+  <nav class="section-rail" aria-label="On this page">
+    <ul class="section-rail__list">
+      <li><a class="section-rail__link" href="#problem" data-rail-section="problem"><span class="visually-hidden">Problem</span></a></li>
+      <li><a class="section-rail__link" href="#primitives" data-rail-section="primitives"><span class="visually-hidden">Primitives</span></a></li>
+      <li><a class="section-rail__link" href="#architecture" data-rail-section="architecture"><span class="visually-hidden">Architecture</span></a></li>
+      <li><a class="section-rail__link" href="#how-it-works" data-rail-section="how-it-works"><span class="visually-hidden">How it works</span></a></li>
+      <li><a class="section-rail__link" href="#demo" data-rail-section="demo"><span class="visually-hidden">Demo</span></a></li>
+      <li><a class="section-rail__link" href="#integrations" data-rail-section="integrations"><span class="visually-hidden">Integrations</span></a></li>
+      <li><a class="section-rail__link" href="#get-started" data-rail-section="get-started"><span class="visually-hidden">Developers</span></a></li>
+      <li><a class="section-rail__link" href="#faq" data-rail-section="faq"><span class="visually-hidden">FAQ</span></a></li>
+      <li><a class="section-rail__link" href="#waitlist" data-rail-section="waitlist"><span class="visually-hidden">Waitlist</span></a></li>
+    </ul>
+  </nav>
 
   <script>
     if (location.protocol === 'file:' || (location.port && location.port !== '3333')) {

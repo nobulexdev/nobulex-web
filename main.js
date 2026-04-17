@@ -5,20 +5,41 @@
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ——— Hero video (replace src with videos/hero.mp4 for branded video) ——— */
+  /* ——— Hero video ——— */
   const heroVideo = document.querySelector('.hero__video');
   if (heroVideo && !prefersReducedMotion) {
     heroVideo.play().catch(() => {});
     document.addEventListener('click', () => heroVideo.play().catch(() => {}), { once: true });
   }
 
-  /* ——— Section background videos ——— */
-  document.querySelectorAll('.section__bg-video').forEach((v) => {
-    v.addEventListener('error', () => {
-      v.src = 'https://videos.pexels.com/video-files/4939677/4939677-uhd_2560_1440_30fps.mp4';
-    }, { once: true });
-    v.play().catch(() => {});
-  });
+  /* ——— Section rail (active chapter on long landing) ——— */
+  const rail = document.querySelector('.section-rail');
+  if (rail) {
+    const links = rail.querySelectorAll('.section-rail__link');
+    const sections = [...links]
+      .map((a) => document.getElementById((a.getAttribute('href') || '').replace('#', '')))
+      .filter(Boolean);
+    if (sections.length) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const intersecting = entries
+            .filter((e) => e.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+          const hit = intersecting[0];
+          if (!hit) return;
+          const id = hit.target.id;
+          links.forEach((a) => {
+            const active = a.getAttribute('href') === `#${id}`;
+            a.classList.toggle('is-active', active);
+            if (active) a.setAttribute('aria-current', 'true');
+            else a.removeAttribute('aria-current');
+          });
+        },
+        { rootMargin: '-42% 0px -42% 0px', threshold: [0, 0.08, 0.2] }
+      );
+      sections.forEach((s) => observer.observe(s));
+    }
+  }
 
   /* ——— Hamburger menu ——— */
   const navToggle = document.querySelector('.nav-toggle');
@@ -275,30 +296,66 @@
     setInterval(update, 36e5);
   }
 
-  /* ——— Scroll progress bar ——— */
+  /* ——— Scroll progress bar (hidden on small viewports via CSS) ——— */
   const scrollBar = document.querySelector('.scroll-bar');
   if (scrollBar) {
+    const scrollBarMq = window.matchMedia('(min-width: 769px)');
     function updateScrollBar() {
+      if (!scrollBarMq.matches) return;
       const h = document.documentElement.scrollHeight - window.innerHeight;
       const pct = h > 0 ? window.scrollY / h : 0;
       scrollBar.style.transform = `scaleX(${pct})`;
     }
+    scrollBarMq.addEventListener('change', updateScrollBar);
     window.addEventListener('scroll', updateScrollBar, { passive: true });
     updateScrollBar();
   }
 
   /* ——— Scroll reveal ——— */
   if (!prefersReducedMotion) {
-    const reveal = document.querySelectorAll('[data-reveal], [data-section]');
+    const reveal = document.querySelectorAll('[data-reveal]');
+    function markVisible(el) {
+      el.classList.add('visible');
+      io.unobserve(el);
+    }
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
-          if (e.isIntersecting) e.target.classList.add('visible');
+          if (!e.isIntersecting) return;
+          markVisible(e.target);
         });
       },
-      { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0.12, rootMargin: '0px' }
     );
     reveal.forEach((el) => io.observe(el));
+    requestAnimationFrame(() => {
+      reveal.forEach((el) => {
+        if (el.classList.contains('visible')) return;
+        const r = el.getBoundingClientRect();
+        const vh = window.innerHeight;
+        if (r.top < vh && r.bottom > 0) markVisible(el);
+      });
+    });
+  }
+
+  /* ——— Header depth on scroll ——— */
+  const headerEl = document.querySelector('.header');
+  if (headerEl && !prefersReducedMotion) {
+    let ticking = false;
+    function updateHeader() {
+      ticking = false;
+      headerEl.classList.toggle('header--scrolled', window.scrollY > 32);
+    }
+    function onScrollHeader() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateHeader);
+      }
+    }
+    window.addEventListener('scroll', onScrollHeader, { passive: true });
+    updateHeader();
+  } else if (headerEl) {
+    headerEl.classList.toggle('header--scrolled', window.scrollY > 32);
   }
 
   /* ——— See it fail closed demo ——— */
